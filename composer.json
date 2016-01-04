@@ -16,10 +16,10 @@
   ],
   "autoload" : {
     "psr-0" : {
-      "Aslak\\DocBundle" : ""
+      "AslakStudio\\DocBundle" : ""
     }
   },
-  "target-dir" : "Aslak/DocBundle",
+  "target-dir" : "AslakStudio/DocBundle",
   "repositories" : [{
   }]
 }
