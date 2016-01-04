@@ -1,0 +1,20 @@
+services:
+    doc.controller.name.parser:
+        class: Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser
+        arguments:
+            - "@kernel"
+    doc.extractor:
+        class: AslakStudio\DocBundle\Service\DocExtractor
+        arguments:
+            - "@service_container"
+            - "@router"
+            - "@annotations.reader"
+            - "@doc.controller.name.parser"
+    doc.parser:
+        class: AslakStudio\DocBundle\Service\DocParser
+        arguments:
+            - "@service_container"
+    doc.json:
+        class: AslakStudio\DocBundle\Service\DocJson
+        arguments:
+            - "@service_container"

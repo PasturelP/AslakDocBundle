@@ -1,0 +1,69 @@
+.fa{
+  margin-right:5px;
+}
+
+.doc-block{
+  margin-top:10px;
+  &:first-child{
+    margin-top:0;
+  }
+  .doc-head{
+    cursor: pointer;
+    line-height: 20px;
+    margin:0;
+    padding:0;
+    background: white;
+    .doc-method-all {
+      padding:0;
+    }
+
+    .doc-path{
+      padding:10px 0;
+      padding-left:5%;
+      font-weight: bold;
+      .doc-path-tag{
+        padding:2px 3px;
+        color:white;
+        background:#3f51b5;
+        margin:0 5px;
+        @include border-radius(4px);
+      }
+    }
+    .doc-description{
+      text-align: right;
+      margin-top:10px;
+    }
+  }
+  .doc-content {
+    background: #3f51b5;
+    color:white;
+    display: none;
+    padding:15px;
+    table{
+      background: white;
+      width:100%;
+      color: #212121;
+      box-shadow : 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+      th, td{
+        text-align: center;
+      }
+
+      thead{
+        background:rgba(63,81,181, 0.9);
+        box-shadow : 5px 5px 10px 5px #3f51b5;
+        color:white;
+        text-transform: uppercase;
+      }
+      tbody{
+        tr:nth-child(2n){
+          background:#e8eaf6;
+        }
+        tr:first-child{
+          td{
+            padding-top:10px;
+          }
+        }
+      }
+    }
+  }
+}

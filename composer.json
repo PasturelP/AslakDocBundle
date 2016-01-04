@@ -1,0 +1,23 @@
+{
+  "name": "aslak/doc-bundle",
+  "description": "Aslak Doc Bundle",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Paul",
+      "email": "contact@paulpasturel.com"
+    }
+  ],
+  "require": {},
+  "keywords" : [
+    "api"
+  ],
+  "autoload" : {
+    "psr-0" : {
+      "Aslak\\DocBundle" : ""
+    }
+  },
+  "target-dir" : "Aslak/DocBundle",
+  "repositories" : [{
+  }]
+}

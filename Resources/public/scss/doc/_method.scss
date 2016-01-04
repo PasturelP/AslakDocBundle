@@ -1,0 +1,29 @@
+.method-block-all{
+  padding:0;
+  .method-block{
+
+  }
+}
+
+
+.POST{
+  background: #b71c1c;
+  color:white;
+  @extend .method;
+}
+
+.GET{
+  background:  #4caf50;
+  color:white;
+  @extend .method;
+}
+.method{
+  padding:10px 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  &[active="true"]{
+    box-shadow : 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+  }
+}

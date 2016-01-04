@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html ng-app="DocApp">
+<head>
+    <meta charset="UTF-8" />
+    <title>Documentation</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    {% stylesheets
+        '@AslakStudioDocBundle/Resources/public/lib/bootstrap/css/bootstrap.min.css'
+        '@AslakStudioDocBundle/Resources/public/css/style.css'
+
+    filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+
+</head>
+<body ng-controller="DocController">
+    <div class="wrap-container">
+        <div class="col-md-12 col-xs-12 main-container" >
+            <div class="col-md-12 col-xs-12 title">
+                <h2 class="col-md-10 col-md-offset-2 col-xs-12">
+                    Documentation <b>{{ title }}</b>
+                </h2>
+
+            </div>
+            <div class="col-md-12 col-xs-12 container">
+                <div class="col-md-1 col-md-offset-1 block method-block-all col-xs-12" >
+                    <div class="col-md-12 method-block" ng-repeat="method in methods" ng-class="method" ng-click="filterMethod($event,method)" id="{[{ method }]}" active="false">
+                        <i class="fa"></i>{[{ method }]}
+                    </div>
+                </div>
+                <div class="col-md-7 col-xs-12">
+                    <div class="col-md-10 col-md-offset-1 doc-block" ng-repeat="(kroute,route) in routes" id="{[{ kroute }]}" method="{[{ route.method.toString() }]}" tags="{[{ route.tags.toString() }]}">
+                        <div class="col-md-12 block doc-head" ng-click="clickHead($event,kroute)">
+                            <div class="col-md-2 doc-method-all" ng-repeat="meth in route.method">
+                                <div class="col-md-12" ng-class="meth">
+                                    {[{ meth }]}
+                                </div>
+                            </div>
+                            <div class="col-md-5 doc-path">
+                                {[{ route.path }]} <span class="doc-path-tag" ng-if="route.tags" ng-repeat="tag in route.tags" name="{[{ tag }]}" >{[{ tag }]}</span>
+                            </div>
+                            <div class="col-md-5 doc-description">
+                                {[{ route.description }]}
+                            </div>
+
+                        </div>
+                        <div class="col-md-12 block doc-content">
+                            <div ng-if="route.parameters" >
+                                <h3>Paramètres</h3>
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th  ng-repeat="(key,parameter) in route.parameters[0]" class="col-md-{[{ 12 / count(route.parameters[0]) |round }]}" >{[{ key }]}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="parameter in route.parameters" required="{[{ parameter.required }]}">
+                                        <td ng-repeat="value in parameter" class="col-md-{[{ 12 / count(route.parameters[0]) |round }]}"> {[{ value }]}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="json" ng-if="route.json">
+                                <h3>Résultat</h3>
+                                <pre>
+                                    <code class="json">
+                                        {[{ route.json }]}
+                                    </code>
+                                </pre>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-2  col-xs-12">
+                    <div class="col-md-12  col-xs-12">
+                        <div  ng-repeat="tag in tags" class="col-md-10 col-md-offset-1 block tag-block" ng-click="filterTag($event,tag)" active="false" id="{[{ tag }]}">
+                            <i class="fa"></i>{[{ tag }]}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+    {% javascripts
+    '@AslakStudioDocBundle/Resources/public/lib/bootstrap/js/bootstrap.min.js'
+    '@AslakStudioDocBundle/Resources/public/lib/angular/angular-js.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        hljs.initHighlightingOnLoad();
+        var app = angular.module('DocApp', []).config(function($interpolateProvider){
+            $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
+        });
+
+        app.controller('DocController', function ($scope, $http) {
+            $http.get('{{ path('aslak_doc_get') }}').success(function(response){
+                $scope.routes = response;
+                $scope.tags = [];
+                $scope.methods = [];
+                angular.forEach($scope.routes, function(val, key) {
+                    angular.forEach(val["tags"], function(tag,k){
+                        if(!stringInArray(tag,$scope.tags))
+                            $scope.tags.push(tag);
+                    });
+
+                    angular.forEach(val["method"], function(method,key){
+                        if(!stringInArray(method,$scope.methods))
+                            $scope.methods.push(method);
+                    });
+
+                });
+
+            });
+            $scope.count = function(array)
+            {
+                return Object.keys(array).length;
+            };
+
+            $scope.filterMethod = function(e, method)
+            {
+                $(".method-block").each(function(){
+                    if($(this).attr("active") == "true" && !$(this).hasClass(method))
+                        $(this).attr("active","false");
+                });
+
+                if($(e.target).attr("active") == "true")
+                    $(e.target).attr("active","false");
+                else
+                    $(e.target).attr("active","true");
+                $scope.filter();
+
+            };
+
+            $scope.filter = function()
+            {
+                var faActive = 'fa-star';
+                $(".doc-block").each(function(){
+                    $(this).css("display","block");
+                });
+                $(".tag-block").each(function(){
+                    var i = $(this).attr('id');
+                    if($(this).attr('active') == "true") {
+                        $(".doc-block").each(function () {
+                            var tags = $(this).attr('tags').split(",");
+                            if (!stringInArray(i, tags)) {
+                                $(this).hide();
+                            }
+                        });
+                    }
+                });
+                var method = $(".method-block[active='true']").attr("id");
+                if( method != undefined)
+                {
+                    $(".doc-block").each(function () {
+                        var methods = $(this).attr('method').split(",");
+                        if (!stringInArray(method, methods)) {
+                            $(this).hide();
+                        }
+                    });
+                }
+
+                $(".tag-block").each(function(){
+                    var i = $(this).find('i');
+                    if($(this).attr('active') == "true") {
+                        if (!i.hasClass(faActive)) {
+                            i.addClass(faActive);
+                        }
+                    }else {
+                        if (i.hasClass(faActive)) {
+                            i.removeClass(faActive);
+                        }
+                    }
+                });
+                $(".method-block").each(function(){
+                    var i = $(this).find('i');
+                    if($(this).attr('active') == "true") {
+                        if (!i.hasClass(faActive)) {
+                            i.addClass(faActive);
+                        }
+                    }else {
+                        if (i.hasClass(faActive)) {
+                            i.removeClass(faActive);
+                        }
+                    }
+                });
+
+            };
+
+            $scope.filterTag = function(e, id)
+            {
+                $button = $(e.target);
+                if($button.attr('active') == "true")
+                {
+                    $button.attr('active',"false");
+                    $scope.filter();
+
+                }
+                else
+                {
+                    $button.attr('active',"true");
+                    $scope.filter();
+                }
+            };
+
+            $scope.clickHead = function(e, id)
+            {
+                $content = $("#"+id).find('.doc-content');
+                if($content.css('display') == "block")
+                    $content.hide();
+                else
+                    $content.show();
+            };
+
+            function stringInArray(string, array)
+            {
+                for(var i = 0; i < Object.keys(array).length; i++)
+                    if(array[i] == string)
+                        return true;
+                return false;
+            }
+        });
+
+        app.filter('round', function() {
+            return function(input) {
+                return Math.round(input);
+            };
+        });
+
+
+        $('.doc-head').on('click',function(e){
+            alert('2');
+            $content = $(this).parent().find('.doc-content');
+            if($content.css('display') == "none")
+                $content.show();
+            else
+                $content.hide();
+        });
+    </script>
+
+</body>
+</html>

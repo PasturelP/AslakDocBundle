@@ -1,0 +1,3 @@
+aslak_studio_doc_homepage:
+    resource: "@AslakStudioDocBundle/Controller/"
+    type:     annotation
