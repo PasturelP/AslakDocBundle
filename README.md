@@ -1,5 +1,3 @@
-###require:
-	symfony/assetic-bundle
 ```yml
 	assetic:
 		debug:          "%kernel.debug%"
@@ -7,4 +5,15 @@
 		bundles:        [ ]
 		filters:
 		    cssrewrite: ~
+```
+
+```yml
+doc:
+    resource: "@AslakStudioDocBundle/Resources/config/routing.yml"
+    prefix:   /doc
+```
+
+```yml
+aslak_studio_doc:
+    name: Alex Click
 ```

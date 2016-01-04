@@ -8,7 +8,9 @@
       "email": "contact@paulpasturel.com"
     }
   ],
-  "require": {},
+  "require": {
+    "symfony/assetic-bundle": "*"
+  },
   "keywords" : [
     "api"
   ],
