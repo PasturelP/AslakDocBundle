@@ -14,7 +14,7 @@ doc:
 
 ```yml
 aslak_studio_doc:
-    name: Alex Click
+    name: My App
 ```
 
 ### Add
@@ -29,10 +29,38 @@ aslak_studio_doc:
 ```json
     "repositories" : [{
         "type" : "vcs",
-        "url" : "https://PasturelP@bitbucket.org/AslakStudio/docbundle.git"
+        "url" : "https://github.com/PasturelP/AslakDocBundle.git    "
     }]
 ```
 
 ```json
 "aslak/doc-bundle": "dev-master"
+```
+
+
+### Use
+
+```php
+
+<?php
+
+use AslakStudio\DocBundle\Annotation\Doc;
+
+class MyController extends Controller
+{
+    /**
+     *
+     * @Doc(
+     *  description="My Method Description",
+     *  method={"POST", "GET"},
+     *  parameters={
+     *      {"name"="id", "type"="integer", "required"=false, "description"="Parameter ID"}
+     *  },
+     *  tags={"doc", "documentation", "tag"}
+     * )
+     *
+     * @Route("/", name="my_route")
+     */
+
+
 ```
